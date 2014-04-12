@@ -107,5 +107,6 @@ public class SimulatorRestHandler extends AbstractHandler implements
                     "Error Processing " + pRequest.getRequestURL() + " - "
                             + execp.getMessage());
         }
+        pBaseRequest.setHandled(true);
     }
 }

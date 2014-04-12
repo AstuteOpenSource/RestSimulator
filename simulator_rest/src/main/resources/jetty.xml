@@ -3,6 +3,26 @@
 
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
 
+
+
+    <New id="config" class="org.eclipse.jetty.server.HttpConfiguration">
+        <Arg>
+            <New id="ohttpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
+                <Set name="outputBufferSize">32768</Set>
+                <Set name="requestHeaderSize">10240</Set>
+                <Set name="responseHeaderSize">1024</Set>
+                <Set name="sendDateHeader">false</Set>
+                <Set name="sendXPoweredBy">false</Set>
+                <Set name="sendServerVersion">false</Set>
+
+                <!-- Uncomment to enable handling of X-Forwarded- style headers <Call 
+                    name="addCustomizer"> <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg> 
+                    </Call> -->
+            </New>
+        </Arg>
+    </New>
+
+
     <Call id="connector" name="addConnector">
         <Arg>
             <New class="org.eclipse.jetty.server.ServerConnector">
@@ -11,15 +31,6 @@
                 </Arg>
                 <Arg name="factories">
                     <Array type="org.eclipse.jetty.server.ConnectionFactory">
-                        <Item>
-                            <New class="org.eclipse.jetty.server.SslConnectionFactory">
-                                <Arg name="next">http/1.1</Arg>
-                                <Arg name="sslContextFactory">
-                                    <Ref refid="sslExternalContextFactory" />
-                                </Arg>
-
-                            </New>
-                        </Item>
                         <Item>
                             <New class="org.eclipse.jetty.server.HttpConnectionFactory">
                                 <Arg name="config">
@@ -36,7 +47,7 @@
                 </Set>
                 <Set name="host">
                     <SystemProperty name="REST_SERVICE_HOST"
-                        default="0.0.0.0" />
+                        default="localhost" />
                 </Set>
             </New>
         </Arg>

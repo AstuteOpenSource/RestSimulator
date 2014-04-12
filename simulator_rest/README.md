@@ -21,7 +21,7 @@ Update jetty.xml for performance
 Service startup works the same way either stand alone or embedded.
 
 * Define Port to use for for service from system property REST\_SERVICE\_PORT. Defaults to 9090.
-* Define host ip to use for for service from system property REST\_SERVICE\_HOST. Defaults to 0.0.0.0.
+* Define host ip to use for for service from system property REST\_SERVICE\_HOST. Defaults to localhost.
 * Define data path root from system property REST\_DATA\_ROOT. Defaults to ./data.
 * Load [Global properties](#propertyFile) (optional) called config.properties located in REST\_DATA\_ROOT path.
 * Start service. Currently uses JETTY embedded.
