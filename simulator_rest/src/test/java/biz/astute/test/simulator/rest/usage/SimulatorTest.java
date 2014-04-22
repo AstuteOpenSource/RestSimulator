@@ -20,14 +20,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.logging.Logger;
 
-import junit.framework.Assert;
-
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.message.BasicHeader;
 import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.http.HttpMethod;
 import org.hamcrest.Matchers;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -46,8 +40,7 @@ import com.jayway.restassured.RestAssured;
  */
 // You may need to comment out dependsOnGroups as well as @BeforeClass
 // on setupCorrectstuff() while running single in IDE
-// @Test
-// (dependsOnGroups = "SimulatorFailedInit")
+@Test(dependsOnGroups = "SimulatorFailedInit")
 public class SimulatorTest extends BaseSimulatorTest {
 
     /**
@@ -56,7 +49,7 @@ public class SimulatorTest extends BaseSimulatorTest {
     private static final Logger LOGGER = Logger.getLogger(SimulatorTest.class
             .getName());
 
-    // @BeforeClass
+    @BeforeClass
     protected void setupCorrectstuff() throws URISyntaxException {
 
         if (!isInitFinished()) {
@@ -76,46 +69,20 @@ public class SimulatorTest extends BaseSimulatorTest {
     }
 
     public void testDummyGET() throws IOException {
-        HttpResponse response = null;
-        try {
 
-            Header[] headers = {new BasicHeader(HEADER_TEST_ID, "DGET")};
-            response = makeRequest("/dummy", HttpMethod.GET, headers, null);
-            Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine()
-                    .getStatusCode());
-            String data = getResponseText(response);
-            Assert.assertTrue(data.contains("Test DGET"));
-        } finally {
-            closeResponse(response);
-        }
+        RestAssured.given(defaultRequestSpec()).header(HEADER_TEST_ID, "DGET")
+                .when().get("/dummy").then().statusCode(HttpStatus.SC_OK)
+                .content(Matchers.containsString("Test DGET"));
 
     }
 
-    @Test
     public void testProfileAlt() throws IOException {
-        HttpResponse response = null;
-        try {
-
-            Header[] headers = {new BasicHeader(HEADER_TEST_ID, "DGET")};
-            final long expectedContentLength = 757;
-            response =
-                    makeRequest("/profile-alternate/users//avatar",
-                            HttpMethod.GET, headers, null);
-            Assert.assertEquals(HttpStatus.SC_NOT_FOUND, response
-                    .getStatusLine().getStatusCode());
-            Assert.assertEquals("application/png", response.getEntity()
-                    .getContentType().getValue());
-            Assert.assertEquals(expectedContentLength, response.getEntity()
-                    .getContentLength());
-        } finally {
-            closeResponse(response);
-        }
 
         RestAssured.given().header(HEADER_TEST_ID, "DGET")
                 .header(HttpHeader.ACCEPT.asString(), "image/png").when()
-                .get("/profile-alternate/users/2/avatar").then()
-                .statusCode(HttpStatus.SC_OK).contentType("image/png")
-                .header(HttpHeader.CONTENT_LENGTH.asString(), "836");
+                .get("/profile-alternate/users//avatar").then()
+                .statusCode(HttpStatus.SC_NOT_FOUND).contentType("image/png")
+                .header(HttpHeader.CONTENT_LENGTH.asString(), "757");
 
     }
 

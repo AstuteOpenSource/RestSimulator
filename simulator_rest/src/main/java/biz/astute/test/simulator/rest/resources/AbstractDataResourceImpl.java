@@ -15,9 +15,27 @@
  * You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package biz.astute.test.simulator.rest.resources;
+
+import biz.astute.test.simulator.rest.RequestContext;
+
 /**
+ * Abstract Data resource that needs to be extended by providers.
  * @author Lloyd.Fernandes
  *
  */
-package biz.astute.test.simulator.rest;
+public abstract class AbstractDataResourceImpl implements
+        DataResourceInterface {
 
+    /**
+     * Data resource initialization. 
+     * It is expected that the one time initialization will be done 
+     * first time this is called. Note that the factory will call it 
+     * each time an object is created. 
+     * @param pRequestContext request context
+     * @throws DataResourceException exception
+     */
+    abstract public void bootstrap(final RequestContext pRequestContext)
+            throws DataResourceException;
+
+}

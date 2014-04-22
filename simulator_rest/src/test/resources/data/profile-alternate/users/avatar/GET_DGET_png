@@ -1,0 +1,3 @@
+response.status=404
+response.data.resource=1.PNG
+response.header.Content-Type=image/png

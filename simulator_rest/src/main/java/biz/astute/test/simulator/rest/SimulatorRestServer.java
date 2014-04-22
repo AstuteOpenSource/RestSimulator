@@ -2,16 +2,18 @@
  * (c) 2014 Astute.BIZ, Inc.
  *               A New Jersey Corporation, USA.
  *
- * THIS SOFTWARE AND DOCUMENTATION IS PROVIDED "AS IS," AND
- * COPYRIGHT HOLDERS MAKE NO REPRESENTATIONS OR WARRANTIES,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO, WARRANTIES
- * OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR
- * THAT THE USE OF THE SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE
- * ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
+ * This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
  *
- * COPYRIGHT HOLDERS WILL NOT BE LIABLE FOR ANY DIRECT,
- * INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT
- * OF ANY USE OF THE SOFTWARE OR DOCUMENTATION.
+ * This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package biz.astute.test.simulator.rest;
 
@@ -49,6 +51,16 @@ public final class SimulatorRestServer {
     private SimulatorRestServer() {
         // Do Nothing
     }
+
+    /**
+     * Start the server.
+     * @param args arguments
+     * @throws Exception exception
+     */
+    public static void main(final String[] args) throws Exception {
+        start();
+    }
+
     /**
      * Start the server.
      * @throws Exception exception
@@ -69,7 +81,36 @@ public final class SimulatorRestServer {
         config = null;
         serverTmp.start();
         server = serverTmp;
+        server.join();
         LOGGER.info("Server Started");
+    }
+
+    /**
+     * Start the server detached.
+     * @throws Exception exception
+     */
+    public static void startDetached() throws Exception {
+
+        Runnable runnable = new Runnable() {
+
+            /**
+             * {@inheritDoc}
+             */
+            @Override
+            public void run() {
+                try {
+                    start();
+                } catch (Exception execp) {
+                    throw new RuntimeException(execp);
+                }
+            }
+
+        };
+        new Thread(runnable).start();
+        int counter = 1000;
+        while ((--counter > 0) && ((server == null) || (!server.isRunning()))) {
+            Thread.sleep(5);
+        }
     }
 
     /**
@@ -84,17 +125,6 @@ public final class SimulatorRestServer {
         server.stop();
         LOGGER.info("Server is stopped");
 
-    }
-
-    /**
-     * Start the server.
-     * @param args arguments
-     * @throws Exception exception
-     */
-    public static void main(final String[] args) throws Exception {
-
-        start();
-        server.join();
     }
 
 }

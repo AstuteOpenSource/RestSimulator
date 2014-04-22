@@ -2,9 +2,6 @@
 <!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
 
 <Configure id="Server" class="org.eclipse.jetty.server.Server">
-
-
-
     <New id="config" class="org.eclipse.jetty.server.HttpConfiguration">
         <Arg>
             <New id="ohttpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
@@ -14,15 +11,9 @@
                 <Set name="sendDateHeader">false</Set>
                 <Set name="sendXPoweredBy">false</Set>
                 <Set name="sendServerVersion">false</Set>
-
-                <!-- Uncomment to enable handling of X-Forwarded- style headers <Call 
-                    name="addCustomizer"> <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg> 
-                    </Call> -->
             </New>
         </Arg>
     </New>
-
-
     <Call id="connector" name="addConnector">
         <Arg>
             <New class="org.eclipse.jetty.server.ServerConnector">
@@ -42,18 +33,14 @@
                 </Arg>
                 <Set name="idleTimeout">30000</Set>
                 <Set name="port">
-                    <SystemProperty name="REST_SERVICE_PORT"
-                        default="9090" />
+                    <SystemProperty name="REST_SERVICE_PORT" default="9090" />
                 </Set>
                 <Set name="host">
-                    <SystemProperty name="REST_SERVICE_HOST"
-                        default="localhost" />
+                    <SystemProperty name="REST_SERVICE_HOST" default="localhost" />
                 </Set>
             </New>
         </Arg>
     </Call>
-
-
 
     <Set name="handler">
         <New class="biz.astute.test.simulator.rest.SimulatorRestHandler">
